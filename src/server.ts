@@ -1,14 +1,10 @@
-import express from 'express';
-import { test } from './controllers/app.js'
+import app, { init } from "@/app";
 
-const server = express();
+const port = +process.env.PORT || 4000;
 
-server.use(express.json())
-
-server.get("/status", (req, res) => {
-    res.sendStatus(200)
-})
-
-server.get('/teste/:value', test)
-
-server.listen(4000, () => console.log("Ola! Estou de olho na porta: " + "4000"))
+init().then(() => {
+  app.listen(port, () => {
+    /* eslint-disable-next-line no-console */
+    console.log(`Estou de olho na porta: ${port}!!!`);
+  });
+});
