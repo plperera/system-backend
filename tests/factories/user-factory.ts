@@ -6,12 +6,11 @@ import { signUpBody } from "./auth-factory";
 
 async function createUser(body: signUpBody) {
 
-    const name = 'Pedro'
     const hashedPassword = await bcrypt.hash(body.password, 10);
 
     return prisma.users.create({
         data: {
-            name:name,
+            name:body.name,
             email:body.email,
             password:hashedPassword
         }

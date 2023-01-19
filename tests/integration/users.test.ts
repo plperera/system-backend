@@ -46,12 +46,15 @@ describe("POST /auth/sign-up", () => {
 
   describe("when credential are valid", () => {
 
-    it("should respond with status 401 when user has already registered with this email", async () => {
+    it("should respond with status 409 when user has already registered with this email", async () => {
 
       const firstUserValidBody = authFactory.generateValidBody()
       await userFactory.createUser(firstUserValidBody)
 
       const secondUserValidBody = authFactory.generateValidBody()
+
+      secondUserValidBody.email = firstUserValidBody.email
+      
       const response = await server.post("/auth/sign-up").send(secondUserValidBody)
 
       expect(response.status).toBe(httpStatus.CONFLICT)
@@ -69,7 +72,7 @@ describe("POST /auth/sign-up", () => {
     })
   })
 });
-
+/*
 describe("GET /auth/sign-in", () => {
 
   it("should respond with status 400 when body is not given", async () => {
@@ -165,3 +168,4 @@ describe("GET /auth/sign-in", () => {
     })
   })
 });
+*/

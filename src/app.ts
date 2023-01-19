@@ -5,6 +5,7 @@ import cors from "cors";
 
 import { loadEnv, connectDb, disconnectDB } from "@/config";
 import { userRouter } from "./routers/user-router";
+import { authRouter } from "./routers/auth-router";
 
 loadEnv();
 
@@ -15,6 +16,7 @@ app
   .use(express.json())
   .get("/health", (_req, res) => res.send("OK!"))
   .use("/user", userRouter)
+  .use("/auth", authRouter)
 
 export function init(): Promise<Express> {
   connectDb();
