@@ -73,31 +73,94 @@ describe("POST /auth/sign-up", () => {
 describe("GET /auth/sign-in", () => {
 
   it("should respond with status 400 when body is not given", async () => {
-
+    const response = await server.post("/auth/sign-in")
+    expect(response.status).toBe(httpStatus.BAD_REQUEST)
   })
 
   describe("when body is valid", () => {
 
     it("should respond with status 401 if email is not valid", async () => {
 
+      const validBody = authFactory.generateValidBody()
+      await userFactory.createUser(validBody)
+
+      const loginBody = {
+        email: 'emailquenaoexistekkkk@gmail.com',
+        password: validBody.password
+      }
+
+      const response = await server.get("/auth/sign-in").send(loginBody)
+
+      expect(response.status).toBe(httpStatus.UNAUTHORIZED)
+
     })
 
     it("should respond with status 401 if email is valid but password is not correct", async () => {
+
+      const validBody = authFactory.generateValidBody()
+      await userFactory.createUser(validBody)
+
+      const loginBody = {
+        email: validBody.email,
+        password: "123ABC$"
+      }
+
+      const response = await server.get("/auth/sign-in").send(loginBody)
+
+      expect(response.status).toBe(httpStatus.UNAUTHORIZED)
 
     })
     
     describe("when credentials are valid", () => {
 
-      it("should respond with status 200", () => {
+      it("should respond with status 200", async () => {
+
+        const validBody = authFactory.generateValidBody()
+        await userFactory.createUser(validBody)
+  
+        const loginBody = {
+          email: validBody.email,
+          password: validBody.password
+        }
+  
+        const response = await server.get("/auth/sign-in").send(loginBody)
+  
+        expect(response.status).toBe(httpStatus.OK)
 
       })
 
-      it("should respond with user data", () => {
-        
+      it("should respond with user data", async () => {
+
+        const validBody = authFactory.generateValidBody()
+        const createdUser = await userFactory.createUser(validBody)
+  
+        const loginBody = {
+          email: validBody.email,
+          password: validBody.password
+        }
+  
+        const response = await server.get("/auth/sign-in").send(loginBody)
+  
+        expect(response.body.user).toBe({
+          id: createdUser.id,
+          email: createdUser.email,
+          name: createdUser.name
+        })
       })
 
-      it("should respond with session token", () => {
+      it("should respond with session token", async () => {
         
+        const validBody = authFactory.generateValidBody()
+        const createdUser = await userFactory.createUser(validBody)
+  
+        const loginBody = {
+          email: validBody.email,
+          password: validBody.password
+        }
+  
+        const response = await server.get("/auth/sign-in").send(loginBody)
+  
+        expect(response.body.token).toBeDefined();
       })
     })
   })
