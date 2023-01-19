@@ -11,8 +11,8 @@ model sessions {
   id        Int      @id @default(autoincrement())
   userId    Int?
   token     String   @unique
-  createdAt DateTime @db.Date
-  isActived Boolean  @default(true)
+  createdAt DateTime @default(now())
+  isActive Boolean  @default(true)
   users     users?   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -21,8 +21,8 @@ model users {
   name      String
   email     String     @unique
   password  String
-  createdAt DateTime   @db.Date
-  updatedAt DateTime   @db.Date
-  isActived Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  isActive Boolean    @default(true)
   sessions  sessions[]
 }
