@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 import bcrypt from 'bcrypt';
 import { signUpBody } from "../factories/auth-factory";
-import { sessions } from ".prisma/client";
+import { sessions, users } from ".prisma/client";
 
 export async function signUp(req: Request, res: Response){
 
@@ -62,11 +62,19 @@ export async function signIn(req: Request, res: Response) {
         
         const { email, password } = req.body
         
-        const hasAccess = await authService.verifyAccees({ email, password })
+        const hasAccess: users = await authService.verifyAccees({ email, password })
         
         const validAccess: sessions = await authService.validAccess(hasAccess)
 
-        return res.send(validAccess).status(httpStatus.OK)
+        const userBody = {
+
+            id: hasAccess.id,
+            email: hasAccess.email,
+            name: hasAccess.name,
+
+        }
+
+        return res.send({user: userBody, token:validAccess.token}).status(httpStatus.OK)
         
 
     } catch (error) {
@@ -84,7 +92,7 @@ export async function signIn(req: Request, res: Response) {
             return res.status(httpStatus.FORBIDDEN).send(error);
         }
           
-        return res.sendStatus(httpStatus.NOT_FOUND);
+        return res.sendStatus(httpStatus.UNAUTHORIZED);
     }
 }
 

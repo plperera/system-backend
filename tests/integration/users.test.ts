@@ -97,7 +97,7 @@ describe("GET /auth/sign-in", () => {
         password: validBody.password
       }
 
-      const response = await server.get("/auth/sign-in").send(loginBody)
+      const response = await server.post("/auth/sign-in").send(loginBody)
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED)
 
@@ -113,7 +113,7 @@ describe("GET /auth/sign-in", () => {
         password: "123ABC$"
       }
 
-      const response = await server.get("/auth/sign-in").send(loginBody)
+      const response = await server.post("/auth/sign-in").send(loginBody)
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED)
 
@@ -131,7 +131,7 @@ describe("GET /auth/sign-in", () => {
           password: validBody.password
         }
   
-        const response = await server.get("/auth/sign-in").send(loginBody)
+        const response = await server.post("/auth/sign-in").send(loginBody)
   
         expect(response.status).toBe(httpStatus.OK)
 
@@ -147,9 +147,9 @@ describe("GET /auth/sign-in", () => {
           password: validBody.password
         }
   
-        const response = await server.get("/auth/sign-in").send(loginBody)
+        const response = await server.post("/auth/sign-in").send(loginBody)
   
-        expect(response.body.user).toBe({
+        expect(response.body.user).toEqual({
           id: createdUser.id,
           email: createdUser.email,
           name: createdUser.name
@@ -166,7 +166,7 @@ describe("GET /auth/sign-in", () => {
           password: validBody.password
         }
   
-        const response = await server.get("/auth/sign-in").send(loginBody)
+        const response = await server.post("/auth/sign-in").send(loginBody)
   
         expect(response.body.token).toBeDefined();
       })
