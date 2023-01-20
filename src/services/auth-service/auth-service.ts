@@ -32,7 +32,7 @@ async function verifyAccees(body: {email:string, password:string}){
 
         const hasAccess = await userRepository.findFirstWithEmail(body.email)
         
-        if(!hasAccess){
+        if(!hasAccess || hasAccess.isActive !== true){
             throw unauthorizedError()
         }   
 
