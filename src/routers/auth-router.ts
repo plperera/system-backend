@@ -1,10 +1,10 @@
-import { signUp } from '@/controllers/auth-controller'
+import { signIn, signUp } from '@/controllers/auth-controller'
 import { Router } from 'express'
 
 const authRouter = Router()
 
 authRouter
     .post("/sign-up", signUp)
-    .post("/sign-in", )
+    .post("/sign-in", signIn)
 
 export { authRouter }

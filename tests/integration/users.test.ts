@@ -13,6 +13,11 @@ beforeAll(async () => {
   await cleanDb();
 });
 
+beforeEach(async () => {
+  await cleanDb();
+});
+
+
 const server = supertest(app);
 
 describe("POST /auth/sign-up", () => {
@@ -54,7 +59,7 @@ describe("POST /auth/sign-up", () => {
       const secondUserValidBody = authFactory.generateValidBody()
 
       secondUserValidBody.email = firstUserValidBody.email
-      
+
       const response = await server.post("/auth/sign-up").send(secondUserValidBody)
 
       expect(response.status).toBe(httpStatus.CONFLICT)
@@ -72,7 +77,7 @@ describe("POST /auth/sign-up", () => {
     })
   })
 });
-/*
+
 describe("GET /auth/sign-in", () => {
 
   it("should respond with status 400 when body is not given", async () => {
@@ -168,4 +173,3 @@ describe("GET /auth/sign-in", () => {
     })
   })
 });
-*/

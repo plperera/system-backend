@@ -1,9 +1,11 @@
 import { signupSCHEMA } from "@/schemas/signupSCHEMA";
+import { signInSCHEMA } from "@/schemas/signInSCHEMA";
 import authService from "@/services/auth-service/auth-service";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import bcrypt from 'bcrypt';
 import { signUpBody } from "../factories/auth-factory";
+import { sessions } from ".prisma/client";
 
 export async function signUp(req: Request, res: Response){
 
@@ -48,3 +50,41 @@ export async function signUp(req: Request, res: Response){
           return res.sendStatus(httpStatus.NOT_FOUND);
     }
 }
+
+export async function signIn(req: Request, res: Response) {
+    try {
+
+        const isValid = signInSCHEMA.validate(req.body, {abortEarly: false})
+
+        if(isValid.error){
+            return res.sendStatus(httpStatus.BAD_REQUEST)
+        }
+        
+        const { email, password } = req.body
+        
+        const hasAccess = await authService.verifyAccees({ email, password })
+        
+        const validAccess: sessions = await authService.validAccess(hasAccess)
+
+        return res.send(validAccess).status(httpStatus.OK)
+        
+
+    } catch (error) {
+
+        if (error.name === "UnauthorizedError") {
+            return res.status(httpStatus.UNAUTHORIZED);
+          }
+        if(error.name === "ConflictError") {
+            res.sendStatus(httpStatus.CONFLICT);
+          }
+        if (error.name === "NotFoundError") {
+            return res.status(httpStatus.NOT_FOUND).send(error);
+        }
+        if (error.name === "ForbiddenError") {
+            return res.status(httpStatus.FORBIDDEN).send(error);
+        }
+          
+        return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+}
+

@@ -11,8 +11,18 @@ async function insertNewUser(body: Omit<signUpBody, "passwordVerify">) {
     });
 }
 
+async function createNewSession(body: {userId: number, token: string}){
+    return prisma.sessions.create({
+        data: {
+            userId: body.userId,
+            token: body.token
+        }
+    })
+}
+
 const authRepository = {
-    insertNewUser
+    insertNewUser,
+    createNewSession
 }
 
 export default authRepository

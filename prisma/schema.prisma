@@ -9,7 +9,7 @@ datasource db {
 
 model sessions {
   id        Int      @id @default(autoincrement())
-  userId    Int?
+  userId    Int
   token     String   @unique
   createdAt DateTime @default(now())
   isActive Boolean  @default(true)
