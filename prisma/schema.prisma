@@ -26,3 +26,27 @@ model users {
   isActive Boolean    @default(true)
   sessions  sessions[]
 }
+
+model address {
+  id        Int      @id @default(autoincrement())
+  clientId  Int
+  CEP       String   
+  cidade    String  
+  rua       String  
+  bairro    String  
+  numero    String  
+  telefone  String  
+  createdAt DateTime  @default(now())
+  isActive  Boolean   @default(true)
+  clients   clients?  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model clients {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  email       String?    @unique
+  mainNumber  String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  address     address[]
+}
