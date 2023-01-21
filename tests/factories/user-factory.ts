@@ -18,13 +18,23 @@ async function createUser(body: signUpBody) {
 
 }
 
+async function createSession(body:{token: string, userId: number}) {
+    return prisma.sessions.create({
+        data:{
+            token: body.token,
+            userId: body.userId
+        }
+    })
+}
+
 async function getFirstUser() {
     return prisma.users.findFirst()
 }
 
 const userFactory = {
   createUser,
-  getFirstUser
+  getFirstUser,
+  createSession
 }
 
 export default userFactory
