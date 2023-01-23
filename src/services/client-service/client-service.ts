@@ -6,7 +6,6 @@ import clientRepository from "@/repositories/client-repository/client-repository
 async function createNewClient(body: newClientBody){
 
     const hasClient = await clientRepository.getClientByName(body.name)
-    
 
     if(hasClient !== null){
         throw conflictError()
@@ -17,8 +16,17 @@ async function createNewClient(body: newClientBody){
     return newClient
     
 }
+
+async function findAllClients(){
+
+    const clients = await clientRepository.findManyClients()
+
+    return clients
+    
+}
 const clientService = {
-    createNewClient
+    createNewClient,
+    findAllClients
 }
 
 export default clientService

@@ -140,7 +140,7 @@ describe("POST /clients", () => {
         })
     })
 });
-/*
+
 describe("GET /clients", () => {
 
     it("should respond with status 401 if no token is given", async () => {
@@ -208,18 +208,23 @@ describe("GET /clients", () => {
             const response = await server.get("/clients").set("Authorization", `Bearer ${token}`)
 
             const allClients = await clientFactory.findAllClients()
+            
+            allClients.map((e) => {
+                delete e.createdAt
+                delete e.updatedAt
+            })            
 
-            expect(response.body).toEqual(allClients);
+            expect(response.body).toMatchObject(allClients);
         });
         
     })
 });
-
-describe("GET /client/:clientId", () => {
+/*
+describe("GET /client/:name", () => {
 
     it("should respond with status 401 if no token is given", async () => {
 
-        const response = await server.get("/clients/1");
+        const response = await server.get("/clients/pedro");
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
 
@@ -229,7 +234,7 @@ describe("GET /client/:clientId", () => {
 
         const token = faker.lorem.word();
 
-        const response = await server.get("/clients/1").set("Authorization", `Bearer ${token}`);
+        const response = await server.get("/clients/pedro").set("Authorization", `Bearer ${token}`);
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
 
@@ -242,29 +247,36 @@ describe("GET /client/:clientId", () => {
         
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
 
-        const response = await server.get("/clients/1").set("Authorization", `Bearer ${token}`);
+        const response = await server.get("/clients/pedro").set("Authorization", `Bearer ${token}`);
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
 
     describe("when token is valid and user have a session", () => {
 
-        it("should respond with status 200 when already have a registered client", async () => {
+        it("should respond with status 200 when can search in bank", async () => {
 
             const token = await generateValidToken()
 
             const body = await clientFactory.createClientBody()
-
-            const client = await clientFactory.createClient(body)
     
-            const response = await server.get(`/clients/${client.id}`).set("Authorization", `Bearer ${token}`)
-
-            const clientByFind = await clientFactory.findClientById(client.id)
+            const response = await server.get("/clients/pedro").set("Authorization", `Bearer ${token}`)
 
             expect(response.status).toBe(httpStatus.OK);
         });
 
-        it("should respond with client data when already have a registered client", async () => {
+        it("should respond with client Data (0 clients)", async () => {
+
+            const token = await generateValidToken()
+    
+            const response = await server.get("/clients/pedro").set("Authorization", `Bearer ${token}`)
+
+            const allClients = await clientFactory.findAllClients()
+
+            expect(response.body).toEqual(allClients);
+        });
+
+        it("should respond with client Data", async () => {
 
             const token = await generateValidToken()
 
@@ -272,31 +284,16 @@ describe("GET /client/:clientId", () => {
 
             const client = await clientFactory.createClient(body)
     
-            const response = await server.get(`/clients/${client.id}`).set("Authorization", `Bearer ${token}`)
+            const response = await server.get("/clients").set("Authorization", `Bearer ${token}`)
 
-            const clientByFind = await clientFactory.findClientById(client.id)
+            const allClients = await clientFactory.findAllClients()
+            
+            allClients.map((e) => {
+                delete e.createdAt
+                delete e.updatedAt
+            })            
 
-            expect(response.body).toEqual(clientByFind);
-        });
-
-        it("should respond with status 404 when dont have a registered client", async () => {
-
-            const token = await generateValidToken()
-    
-            const response = await server.get(`/clients/999999999999999`).set("Authorization", `Bearer ${token}`)
-
-            expect(response.status).toBe(httpStatus.NOT_FOUND);
-        });
-
-        it("should respond with client data when already have a registered client", async () => {
-
-            const token = await generateValidToken()
-    
-            const response = await server.get(`/clients/999999999999999`).set("Authorization", `Bearer ${token}`)
-
-            const clientByFind = await clientFactory.findClientById(999999999999999)
-
-            expect(response.body).toEqual(clientByFind);
+            expect(response.body).toMatchObject(allClients);
         });
         
     })

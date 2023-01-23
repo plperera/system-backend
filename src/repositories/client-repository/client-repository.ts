@@ -19,9 +19,14 @@ async function createNewClient(body: newClientBody){
     })
 }
 
+async function findManyClients(){
+    return prisma.clients.findMany({})
+}
+
 const clientRepository = {
     getClientByName,
-    createNewClient
+    createNewClient,
+    findManyClients
 }
 
 export default clientRepository

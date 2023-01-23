@@ -5,12 +5,9 @@ import clientService from "@/services/client-service/client-service";
 import { clients } from "@prisma/client";
 
 export async function newClient(req: Request, res: Response){
-
     try {
 
         const isValid = newClientSCHEMA.validate(req.body, {abortEarly: false})
-
-        
 
         if(isValid.error){
             return res.sendStatus(httpStatus.BAD_REQUEST)
@@ -19,8 +16,6 @@ export async function newClient(req: Request, res: Response){
 
         const newClient: clients = await clientService.createNewClient({ name, email, mainNumber })
         
-        console.log(newClient)
-
         return res.status(httpStatus.CREATED).send(newClient)
                
     } catch (error) {
@@ -35,6 +30,17 @@ export async function newClient(req: Request, res: Response){
           }
           return res.sendStatus(httpStatus.NOT_FOUND);
     }
+}
+export async function getAllClients(req: Request, res: Response){
+  try {
+
+      const allClients: clients[] = await clientService.findAllClients()
+
+      return res.status(httpStatus.OK).send(allClients)
+             
+  } catch (error) {
+      return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
 }
 
 
