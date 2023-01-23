@@ -49,7 +49,7 @@ async function getAllClientAddress(clientId: number) {
 }
 
 async function getAddressById(addressId: number) {
-    return prisma.address.findMany({
+    return prisma.address.findFirst({
         where:{
             id: addressId
         }
