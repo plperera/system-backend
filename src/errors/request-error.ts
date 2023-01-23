@@ -1,8 +1,6 @@
-export function requestError(status: number, statusText: string) {
+export function requestError(status: number, name: string) {
   return {
-    name: "RequestError",
     status,
-    statusText,
-    message: "No result for this search!",
+    name,
   };
 }

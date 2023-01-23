@@ -6,10 +6,11 @@ import userFactory from "./factories/user-factory";
 
 export async function cleanDb() {
 
-  await prisma.sessions.deleteMany({});
-  await prisma.users.deleteMany({});
+  
   await prisma.address.deleteMany({});
   await prisma.clients.deleteMany({});
+  await prisma.sessions.deleteMany({});
+  await prisma.users.deleteMany({});
   
 }
 

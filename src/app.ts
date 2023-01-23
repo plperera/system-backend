@@ -7,6 +7,7 @@ import { loadEnv, connectDb, disconnectDB } from "@/config";
 import { userRouter } from "./routers/user-router";
 import { authRouter } from "./routers/auth-router";
 import { clientRouter } from "./routers/client-router";
+import { addressRouter } from "./routers/address-router";
 
 loadEnv();
 
@@ -16,6 +17,7 @@ app
   .use(cors())
   .use(express.json())
   .get("/health", (_req, res) => res.send("OK!"))
+  .use("/address", addressRouter)
   .use("/user", userRouter)
   .use("/clients", clientRouter)
   .use("/auth", authRouter)

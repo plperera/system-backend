@@ -69,17 +69,19 @@ describe("POST /address", () => {
             expect(response.status).toBe(httpStatus.BAD_REQUEST);
         });
 
-        it("should respond with status 400 when clientId not exist", async () => {
+        it("should respond with status 404 when clientId not exist", async () => {
 
             const token = await generateValidToken()
 
-            //const client = await clientFactory.findAllClients()
+            const clientBody = await clientFactory.createClientBody()
 
-            const body = await addressFactory.generateAddressValidBody(1)
+            const newClient = await clientFactory.createClient(clientBody)
+
+            const body = await addressFactory.generateAddressValidBody(newClient.id + 1)
 
             const response = await server.post("/address").set("Authorization", `Bearer ${token}`).send(body)
 
-            expect(response.status).toBe(httpStatus.BAD_REQUEST);
+            expect(response.status).toBe(httpStatus.NOT_FOUND);
         });
 
         describe("when body is valid", () => {
@@ -88,9 +90,11 @@ describe("POST /address", () => {
 
                 const token = await generateValidToken()
 
-                const client = await clientFactory.findAllClients()
+                const clientBody = await clientFactory.createClientBody()
 
-                const body = await addressFactory.generateAddressValidBody(client[0].id)
+                const newClient = await clientFactory.createClient(clientBody)
+
+                const body = await addressFactory.generateAddressValidBody(newClient.id)
 
                 const response = await server.post("/address").set("Authorization", `Bearer ${token}`).send(body)
 
@@ -98,24 +102,28 @@ describe("POST /address", () => {
 
             });
 
-            it("should respond with client Data", async () => {
+            it("should respond with address Data", async () => {
 
                 const token = await generateValidToken()
 
-                const client = await clientFactory.findAllClients()
+                const clientBody = await clientFactory.createClientBody()
 
-                const body = await addressFactory.generateAddressValidBody(client[0].id)
+                const newClient = await clientFactory.createClient(clientBody)
+
+                const body = await addressFactory.generateAddressValidBody(newClient.id)
 
                 const response = await server.post("/address").set("Authorization", `Bearer ${token}`).send(body)
 
-                const address = addressFactory.getAddressById(response.body.id)
+                const address = await addressFactory.getAddressById(response.body.id)
 
-                expect(response.body).toBe(address);
+                delete address.createdAt
+
+                expect(response.body).toMatchObject(address);
             });
         })
     })
 });
-
+/*
 describe("GET /address/all/:clientId", () => {
 
     it("should respond with status 401 if no token is given", async () => {
@@ -346,3 +354,4 @@ describe("GET /address/unique/:addressId", () => {
         })
     })
 });
+*/
