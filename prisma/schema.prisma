@@ -8,23 +8,26 @@ datasource db {
 }
 
 model sessions {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  token     String   @unique
-  createdAt DateTime @default(now())
-  isActive Boolean  @default(true)
-  users     users?   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  token       String    @unique
+  createdAt   DateTime  @default(now())
+  isActive    Boolean   @default(true)
+
+  users       users?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model users {
-  id        Int        @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   name      String
-  email     String     @unique
+  email     String      @unique
   password  String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  isActive Boolean    @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  isActive  Boolean     @default(true)
+
   sessions  sessions[]
+  ordder    ordder[]
 }
 
 model address {
@@ -38,7 +41,9 @@ model address {
   telefone  String  
   createdAt DateTime  @default(now())
   isActive  Boolean   @default(true)
+
   clients   clients?  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ordder    ordder[]
 }
 
 model clients {
@@ -48,5 +53,58 @@ model clients {
   mainNumber  String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
   address     address[]
+  ordder      ordder[]
 }
+
+model ordderItem {
+  id                Int         @id @default(autoincrement())
+  ordderId          Int
+  productId         Int
+  itemAmount        Int         
+  itemPrice         Int         
+  deliveryStatus    Boolean     @default(false)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  ordder            ordder?     @relation(fields: [ordderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products          products?   @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model products {
+  id                Int         @id @default(autoincrement())
+  COD               String      @unique
+  name              String
+  defaultPrice      Int         
+  height            String         
+  width             String     
+  depth             String    
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  ordderItem        ordderItem[]
+
+}
+
+model ordder {
+  id              Int         @id @default(autoincrement())
+  userId          Int
+  clientId        Int
+  addressId       Int      
+  paymentStatus   Boolean     @default(false)
+  deliveryStatus  Boolean     @default(false)
+  isValid         Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  users           users?      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  clients         clients?    @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  address         address?    @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ordderItem      ordderItem[]
+}
+
+
+
+
+
