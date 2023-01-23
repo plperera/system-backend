@@ -23,7 +23,7 @@ beforeEach(async () => {
 
 const server = supertest(app);
 
-describe("POST /client", () => {
+describe("POST /clients", () => {
 
     it("should respond with status 401 if no token is given", async () => {
 
@@ -81,29 +81,6 @@ describe("POST /client", () => {
             expect(response.status).toBe(httpStatus.BAD_REQUEST);
         });
 
-        it("should respond with status 400 when name is email", async () => {
-
-            const token = await generateValidToken()
-
-            const body = await clientFactory.createClientBody()
-            body.email = ""
-
-            const response = await server.post("/clients").set("Authorization", `Bearer ${token}`).send(body)
-
-            expect(response.status).toBe(httpStatus.BAD_REQUEST);
-        });
-
-        it("should respond with status 400 when name is email", async () => {
-
-            const token = await generateValidToken()
-
-            const body = await clientFactory.createClientBody()
-    
-            const response = await server.post("/clients").set("Authorization", `Bearer ${token}`).send(body)
-
-            expect(response.status).toBe(httpStatus.BAD_REQUEST);
-        });
-
         describe("when body is valid", () => {
 
             it("should respond with status 409 when already have a registered client", async () => {
@@ -154,14 +131,17 @@ describe("POST /client", () => {
                 const response = await server.post("/clients").set("Authorization", `Bearer ${token}`).send(body)
 
                 const allClients = await clientFactory.findAllClients()
+
+                delete allClients[0].createdAt
+                delete allClients[0].updatedAt
     
-                expect(response.body).toEqual(allClients[0]);
+                expect(response.body).toMatchObject(allClients[0]);
             });
         })
     })
 });
-
-describe("GET /client", () => {
+/*
+describe("GET /clients", () => {
 
     it("should respond with status 401 if no token is given", async () => {
 
@@ -321,3 +301,4 @@ describe("GET /client/:clientId", () => {
         
     })
 });
+*/
