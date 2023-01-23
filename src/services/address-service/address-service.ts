@@ -8,6 +8,15 @@ import { address } from "@prisma/client"
 
 async function findManyAddressByClientId(clientId: number){
 
+    const hasClientId = await clientRepository.getClientById(Number(clientId))
+
+    if(!hasClientId){
+        throw notFoundError()
+    }
+
+    const allAddress = await addressRepository.findManyAddressByClientId(Number(clientId))
+
+    return allAddress
 
 }
 

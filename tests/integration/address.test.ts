@@ -123,7 +123,7 @@ describe("POST /address", () => {
         })
     })
 });
-/*
+
 describe("GET /address/all/:clientId", () => {
 
     it("should respond with status 401 if no token is given", async () => {
@@ -162,11 +162,11 @@ describe("GET /address/all/:clientId", () => {
 
             const token = await generateValidToken()
 
-            const client = await clientFactory.findAllClients()
+            const clientBody = await clientFactory.createClientBody()
 
-            const body = await addressFactory.generateAddressValidBody(client[0].id)
+            const newClient = await clientFactory.createClient(clientBody)
 
-            const address = await addressFactory.createAddress(body)
+            const body = await addressFactory.generateAddressValidBody(newClient.id)
 
             const response = await server.get("/address/all/1A").set("Authorization", `Bearer ${token}`).send(body)
 
@@ -177,13 +177,15 @@ describe("GET /address/all/:clientId", () => {
 
             const token = await generateValidToken()
 
-            const client = await clientFactory.findAllClients()
+            const clientBody = await clientFactory.createClientBody()
 
-            const body = await addressFactory.generateAddressValidBody(client[0].id)
+            const newClient = await clientFactory.createClient(clientBody)
 
-            const address = await addressFactory.createAddress(body)
+            const body = await addressFactory.generateAddressValidBody(newClient.id)
 
-            const response = await server.get("/address/all/1").set("Authorization", `Bearer ${token}`).send(body)
+            const newAddress = await addressFactory.createAddress(body)
+
+            const response = await server.get("/address/all/99999999999").set("Authorization", `Bearer ${token}`).send(body)
 
             expect(response.status).toBe(httpStatus.NOT_FOUND);
         });
@@ -193,14 +195,16 @@ describe("GET /address/all/:clientId", () => {
             it("should respond with status 201 when already have a registered client", async () => {
 
                 const token = await generateValidToken()
+
+                const clientBody = await clientFactory.createClientBody()
+
+                const newClient = await clientFactory.createClient(clientBody)
+
+                const body = await addressFactory.generateAddressValidBody(newClient.id)
+
+                const newAddress = await addressFactory.createAddress(body)
     
-                const client = await clientFactory.findAllClients()
-    
-                const body = await addressFactory.generateAddressValidBody(client[0].id)
-    
-                const address = await addressFactory.createAddress(body)
-    
-                const response = await server.get(`/address/all/${client[0].id}`).set("Authorization", `Bearer ${token}`).send(body)
+                const response = await server.get(`/address/all/${newClient.id}`).set("Authorization", `Bearer ${token}`).send(body)
     
                 expect(response.status).toBe(httpStatus.OK);
                 
@@ -210,44 +214,54 @@ describe("GET /address/all/:clientId", () => {
             it("should respond with all client address data", async () => {
 
                 const token = await generateValidToken()
-        
-                const client = await clientFactory.findAllClients()
-    
-                const body = await addressFactory.generateAddressValidBody(client[0].id)
 
-                const secondBody = await addressFactory.generateAddressValidBody(client[0].id)
-    
-                const address = await addressFactory.createAddress(body)
+                const clientBody = await clientFactory.createClientBody()
 
-                const secondAddress = await addressFactory.createAddress(secondBody)
-    
-                const response = await server.get(`/address/all/${client[0].id}`).set("Authorization", `Bearer ${token}`).send(body)
+                const newClient = await clientFactory.createClient(clientBody)
 
-                const allAddress = await addressFactory.getAllClientAddress(client[0].id)
+                const body = await addressFactory.generateAddressValidBody(newClient.id)
+                const body2 = await addressFactory.generateAddressValidBody(newClient.id)
+
+                const newAddress = await addressFactory.createAddress(body)
+                const newAddress2 = await addressFactory.createAddress(body2)
     
-                expect(response.body).toEqual(allAddress);
+                const response = await server.get(`/address/all/${newClient.id}`).set("Authorization", `Bearer ${token}`).send(body)
+
+                const allAddress = await addressFactory.getAllClientAddress(newClient.id)
+
+                allAddress.map(e => {
+                    delete e.createdAt
+                })
+    
+                expect(response.body).toMatchObject(allAddress);
             });
 
             it("should respond with all client address data (1 address)", async () => {
 
                 const token = await generateValidToken()
-        
-                const client = await clientFactory.findAllClients()
-    
-                const body = await addressFactory.generateAddressValidBody(client[0].id)
-    
-                const address = await addressFactory.createAddress(body)
-    
-                const response = await server.get(`/address/all/${client[0].id}`).set("Authorization", `Bearer ${token}`).send(body)
 
-                const allAddress = await addressFactory.getAllClientAddress(client[0].id)
+                const clientBody = await clientFactory.createClientBody()
+
+                const newClient = await clientFactory.createClient(clientBody)
+
+                const body = await addressFactory.generateAddressValidBody(newClient.id)
+
+                const newAddress = await addressFactory.createAddress(body)
     
-                expect(response.body).toEqual(allAddress);
+                const response = await server.get(`/address/all/${newClient.id}`).set("Authorization", `Bearer ${token}`).send(body)
+
+                const allAddress = await addressFactory.getAllClientAddress(newClient.id)
+    
+                allAddress.map(e => {
+                    delete e.createdAt
+                })
+    
+                expect(response.body).toMatchObject(allAddress);
             });
         })
     })
 });
-
+/*
 describe("GET /address/unique/:addressId", () => {
 
     it("should respond with status 401 if no token is given", async () => {

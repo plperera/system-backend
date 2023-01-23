@@ -10,7 +10,11 @@ async function getClientByName(name: string) {
 }
 
 async function getClientById(clientId: number) {
-    return prisma.clients.findFirst({})
+    return prisma.clients.findFirst({
+        where:{
+            id: Number(clientId)
+        }
+    })
 }
 
 async function createNewClient(body: newClientBody){

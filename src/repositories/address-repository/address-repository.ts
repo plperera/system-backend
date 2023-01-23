@@ -5,7 +5,7 @@ import {  } from "../../factories/clients-factory";
 async function findManyAddressByClientId(clientId: number) {
     return prisma.address.findMany({
         where:{
-            clientId: Number(clientId)
+            clientId: clientId
         }
     }) 
 }
