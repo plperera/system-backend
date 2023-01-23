@@ -239,12 +239,12 @@ describe("GET /address/all/:clientId", () => {
         })
     })
 });
-/*
+
 describe("GET /address/unique/:addressId", () => {
 
     it("should respond with status 401 if no token is given", async () => {
 
-        const response = await server.get("/address/all/1");
+        const response = await server.get("/address/unique/1");
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
 
@@ -254,7 +254,7 @@ describe("GET /address/unique/:addressId", () => {
 
         const token = faker.lorem.word();
 
-        const response = await server.get("/address/all/1").set("Authorization", `Bearer ${token}`);
+        const response = await server.get("/address/unique/1").set("Authorization", `Bearer ${token}`);
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
 
@@ -267,7 +267,7 @@ describe("GET /address/unique/:addressId", () => {
         
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
 
-        const response = await server.get("/address/all/1").set("Authorization", `Bearer ${token}`);
+        const response = await server.get("/address/unique/1").set("Authorization", `Bearer ${token}`);
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -284,12 +284,12 @@ describe("GET /address/unique/:addressId", () => {
 
             const address = await addressFactory.createAddress(body)
 
-            const response = await server.get("/address/all/1A").set("Authorization", `Bearer ${token}`).send(body)
+            const response = await server.get("/address/unique/1").set("Authorization", `Bearer ${token}`).send(body)
 
             expect(response.status).toBe(httpStatus.BAD_REQUEST);
         });
 
-        it("should respond with status 400 when clientId not exist", async () => {
+        it("should respond with status 400 when address not exist", async () => {
 
             const token = await generateValidToken()
 
@@ -299,14 +299,14 @@ describe("GET /address/unique/:addressId", () => {
 
             const address = await addressFactory.createAddress(body)
 
-            const response = await server.get("/address/all/1").set("Authorization", `Bearer ${token}`).send(body)
+            const response = await server.get("/address/unique/1").set("Authorization", `Bearer ${token}`).send(body)
 
             expect(response.status).toBe(httpStatus.NOT_FOUND);
         });
 
         describe("when body is valid", () => {
 
-            it("should respond with status 201 when already have a registered client", async () => {
+            it("should respond with status 201 when already have a address", async () => {
 
                 const token = await generateValidToken()
     
@@ -316,14 +316,14 @@ describe("GET /address/unique/:addressId", () => {
     
                 const address = await addressFactory.createAddress(body)
     
-                const response = await server.get(`/address/all/${client[0].id}`).set("Authorization", `Bearer ${token}`).send(body)
+                const response = await server.get(`/address/unique/${client[0].id}`).set("Authorization", `Bearer ${token}`).send(body)
     
                 expect(response.status).toBe(httpStatus.OK);
                 
 
             });
 
-            it("should respond with all client address data", async () => {
+            it("should respond with address data", async () => {
 
                 const token = await generateValidToken()
         
@@ -337,30 +337,12 @@ describe("GET /address/unique/:addressId", () => {
 
                 const secondAddress = await addressFactory.createAddress(secondBody)
     
-                const response = await server.get(`/address/all/${client[0].id}`).set("Authorization", `Bearer ${token}`).send(body)
+                const response = await server.get(`/address/unique/${client[0].id}`).set("Authorization", `Bearer ${token}`).send(body)
 
-                const allAddress = await addressFactory.getAllClientAddress(client[0].id)
+                const findAddress = await addressFactory.getAddressById(client[0].id)
     
-                expect(response.body).toEqual(allAddress);
-            });
-
-            it("should respond with all client address data (1 address)", async () => {
-
-                const token = await generateValidToken()
-        
-                const client = await clientFactory.findAllClients()
-    
-                const body = await addressFactory.generateAddressValidBody(client[0].id)
-    
-                const address = await addressFactory.createAddress(body)
-    
-                const response = await server.get(`/address/all/${client[0].id}`).set("Authorization", `Bearer ${token}`).send(body)
-
-                const allAddress = await addressFactory.getAllClientAddress(client[0].id)
-    
-                expect(response.body).toEqual(allAddress);
+                expect(response.body).toEqual(findAddress);
             });
         })
     })
 });
-*/
