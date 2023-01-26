@@ -3,10 +3,14 @@ import * as jwt from "jsonwebtoken";
 import { prisma } from "@/config";
 import authFactory from "./factories/auth-factory";
 import userFactory from "./factories/user-factory";
+import clientFactory from "./factories/clients-factory";
+import addressFactory from "./factories/address-factory";
 
 export async function cleanDb() {
 
-  
+  await prisma.products.deleteMany({})
+  await prisma.ordderItem.deleteMany({})
+  await prisma.ordder.deleteMany({})
   await prisma.address.deleteMany({});
   await prisma.clients.deleteMany({});
   await prisma.sessions.deleteMany({});
@@ -27,3 +31,19 @@ export async function generateValidToken() {
 
 }
 
+export async function generateClientWithAddress(token: string) {
+
+  const clientBody = await clientFactory.createClientBody()
+
+  const newClient = await clientFactory.createClient(clientBody)
+
+  const body = await addressFactory.generateAddressValidBody(newClient.id)
+
+  const newAddress = await addressFactory.createAddress(body)
+
+  return{
+    clientId: newClient.id,
+    addressId: newAddress.id
+  }
+
+}
