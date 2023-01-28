@@ -25,6 +25,7 @@ async function generateProductValidBody() {
     
 }
 async function createProduct(body: newProductBody) {
+
     return prisma.products.create({
         data:{
             COD: body.COD,
@@ -41,11 +42,20 @@ async function getAllProducts() {
     return prisma.products.findMany({})
 }
 
+async function getProductById(productId: number) {
+    return prisma.products.findFirst({
+        where:{
+            id: productId
+        }
+    })
+}
+
 
 const productFactory = {
     createProduct,
     getAllProducts,
-    generateProductValidBody
+    generateProductValidBody,
+    getProductById
 }
 
 export default productFactory

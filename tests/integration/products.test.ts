@@ -25,7 +25,7 @@ beforeEach(async () => {
 
 const server = supertest(app);
 
-describe("POST /address", () => {
+describe("POST /product/new", () => {
 
     it("should respond with status 401 if no token is given", async () => {
 
@@ -135,24 +135,178 @@ describe("POST /address", () => {
 
             });
 
-            it("should respond with address Data", async () => {
+            it("should respond with product Data", async () => {
 
                 const token = await generateValidToken()
 
-                const clientBody = await clientFactory.createClientBody()
+                const ids = await generateClientWithAddress(token)
 
-                const newClient = await clientFactory.createClient(clientBody)
+                const productBody = await productFactory.generateProductValidBody()
 
-                const body = await addressFactory.generateAddressValidBody(newClient.id)
+                const response = await server.post("/products/new").set("Authorization", `Bearer ${token}`).send(productBody)
 
-                const response = await server.post("/address").set("Authorization", `Bearer ${token}`).send(body)
+                const product = await productFactory.getProductById(response.body.id)
 
-                const address = await addressFactory.getAddressById(response.body.id)
+                delete product.createdAt
+                delete product.updatedAt
 
-                delete address.createdAt
+                expect(response.body).toMatchObject(product);
+               
 
-                expect(response.body).toMatchObject(address);
             });
         })
+    })
+});
+
+describe("GET /product", () => {
+
+    it("should respond with status 401 if no token is given", async () => {
+
+        const response = await server.get("/products");
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+
+    });
+
+    it("should respond with status 401 if given token is not valid", async () => {
+
+        const token = faker.lorem.word();
+
+        const response = await server.get("/products").set("Authorization", `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+
+    });
+
+    it("should respond with status 401 if there is no session for given token", async () => {
+
+        const body = authFactory.generateValidBody()
+        const user = await userFactory.createUser(body);
+        
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+
+        const response = await server.get("/products").set("Authorization", `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    describe("when token is valid and user have a session", () => {
+
+        it("should respond with status 200 with 0 products", async () => {
+
+            const token = await generateValidToken()
+            
+            for (let i = 1; i < 1; i++){
+
+                await productFactory.createProduct(await productFactory.generateProductValidBody())
+
+            }
+
+            const response = await server.get("/products").set("Authorization", `Bearer ${token}`)
+
+            expect(response.status).toBe(httpStatus.OK);
+
+        });
+
+        it("should respond with status 200 with 1 products", async () => {
+
+            const token = await generateValidToken()
+            
+            for (let i = 1; i <= 1; i++){
+
+                await productFactory.createProduct(await productFactory.generateProductValidBody())
+
+            }
+
+            const response = await server.get("/products").set("Authorization", `Bearer ${token}`)
+
+            expect(response.status).toBe(httpStatus.OK);
+
+        });
+
+        it("should respond with status 200 with 15 products", async () => {
+
+            const token = await generateValidToken()
+            
+            for (let i = 1; i <= 15; i++){
+
+                await productFactory.createProduct(await productFactory.generateProductValidBody())
+
+            }
+
+            const response = await server.get("/products").set("Authorization", `Bearer ${token}`)
+
+            expect(response.status).toBe(httpStatus.OK);
+
+        });
+
+        it("should respond with product data with 0 product", async () => {
+
+            const token = await generateValidToken()
+            
+            for (let i = 1; i < 1; i++){
+
+                await productFactory.createProduct(await productFactory.generateProductValidBody())
+
+            }
+
+            const response = await server.get("/products").set("Authorization", `Bearer ${token}`)
+
+            const allProducts = await productFactory.getAllProducts()
+
+            allProducts.map(e => {
+                delete e.updatedAt
+                delete e.createdAt
+            })
+
+            expect(response.status).toMatchObject(allProducts);
+
+        });
+
+        it("should respond with product data with 1 product", async () => {
+
+            const token = await generateValidToken()
+            
+            for (let i = 1; i <= 1; i++){
+
+                await productFactory.createProduct(await productFactory.generateProductValidBody())
+
+            }
+
+            const response = await server.get("/products").set("Authorization", `Bearer ${token}`)
+
+            const allProducts = await productFactory.getAllProducts()
+
+            allProducts.map(e => {
+                delete e.updatedAt
+                delete e.createdAt
+            })
+
+            expect(response.status).toMatchObject(allProducts);
+
+        });
+
+        it("should respond with product data with 15 product", async () => {
+
+            const token = await generateValidToken()
+            
+            for (let i = 1; i <= 15; i++){
+
+                await productFactory.createProduct(await productFactory.generateProductValidBody())
+
+            }
+
+            const response = await server.get("/products").set("Authorization", `Bearer ${token}`)
+
+            const allProducts = await productFactory.getAllProducts()
+
+            allProducts.map(e => {
+                delete e.updatedAt
+                delete e.createdAt
+            })
+
+            expect(response.status).toMatchObject(allProducts);
+
+        });
     })
 });
