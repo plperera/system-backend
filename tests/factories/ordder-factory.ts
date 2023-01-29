@@ -80,7 +80,8 @@ async function createFullOrdder(body: fullOrdderBody) {
 
     const ordder = await ordderFactory.createValidOrdder(await ordderFactory.createValidOrdderBody(body.userId))
 
-    const productIdArray: any = []
+    const productIdArray = []
+    const itensArray:newItemBody[] = []
 
     for (let i = body.numberOfItens; i !== 0; i--){
 
@@ -89,10 +90,13 @@ async function createFullOrdder(body: fullOrdderBody) {
 
     }
 
-    productIdArray.map(async (e: number) => await ordderFactory.createValidBodyItem({ordderId: ordder.id, productId: e}))
+    productIdArray.map(async (e) => {
+        const item = await ordderFactory.createValidBodyItem({ordderId: ordder.id, productId: e})
+        itensArray.push(item)
+    })
 
     return prisma.ordderItem.createMany({
-        data:[productIdArray]
+        data:itensArray
     })
     
 }

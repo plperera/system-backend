@@ -8,9 +8,9 @@ import addressFactory from "./factories/address-factory";
 
 export async function cleanDb() {
 
-  await prisma.products.deleteMany({})
   await prisma.ordderItem.deleteMany({})
   await prisma.ordder.deleteMany({})
+  await prisma.products.deleteMany({})
   await prisma.address.deleteMany({});
   await prisma.clients.deleteMany({});
   await prisma.sessions.deleteMany({});

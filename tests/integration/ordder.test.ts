@@ -101,7 +101,7 @@ describe("POST /ordder", () => {
 
         });
         
-        describe("when body is valid", async () => {
+        describe("when body is valid", () => {
 
             it("should respond with status 404 when client not exist", async () => {
 
@@ -193,7 +193,7 @@ describe("POST /ordder", () => {
                 expect(response.status).toBe(httpStatus.FORBIDDEN);
             })
 
-            describe("when body data is valid and have 1 ordderItem", async () => {
+            describe("when body data is valid and have 1 ordderItem", () => {
 
                 it("should respond with status 201", async () => {
 
@@ -259,7 +259,7 @@ describe("POST /ordder", () => {
 
                 })
 
-                describe("when body data is valid and have 2 ordderItem", async () => {
+                describe("when body data is valid and have 2 ordderItem", () => {
 
                     it("should respond with status 201", async () => {
     
@@ -325,7 +325,7 @@ describe("POST /ordder", () => {
     
                     })
 
-                    describe("when body data is valid and have 15 ordderItem", async () => {
+                    describe("when body data is valid and have 15 ordderItem", () => {
 
                         it("should respond with status 201", async () => {
         
@@ -434,7 +434,7 @@ describe("GET /ordder", () => {
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
     
-    describe("when token is valid and no have ordders yet", async () => {
+    describe("when token is valid and no have ordders yet", () => {
 
         it("should respond with status 200", async () => {
 
@@ -462,7 +462,7 @@ describe("GET /ordder", () => {
 
         })
 
-        describe("when token is valid and have 1 ordderItem", async () => {
+        describe("when token is valid and have 1 ordderItem", () => {
 
             it("should respond with status 200", async () => {
     
@@ -494,7 +494,7 @@ describe("GET /ordder", () => {
     
             })
     
-            describe("when body data is valid and have 15 ordderItem", async () => {
+            describe("when body data is valid and have 15 ordderItem", () => {
     
                 it("should respond with status 200", async () => {
     
@@ -528,7 +528,7 @@ describe("GET /ordder", () => {
             })
         })
     
-        describe("when token is valid and have 2 ordders and 1 ordderItem", async () => {
+        describe("when token is valid and have 2 ordders and 1 ordderItem", () => {
     
             it("should respond with status 200", async () => {
     
@@ -562,7 +562,7 @@ describe("GET /ordder", () => {
     
             })
     
-            describe("when token is valid and have 2 ordders and 15 ordderItem", async () => {
+            describe("when token is valid and have 2 ordders and 15 ordderItem", () => {
     
                 it("should respond with status 200", async () => {
     
