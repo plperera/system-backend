@@ -121,7 +121,7 @@ describe("POST /product/new", () => {
 
             });
 
-            it("should respond with status 201 when already have a registered name and COD", async () => {
+            it("should respond with status 201 when no have a registered name and COD", async () => {
 
                 const token = await generateValidToken()
 
