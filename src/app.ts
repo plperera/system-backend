@@ -9,6 +9,7 @@ import { authRouter } from "./routers/auth-router";
 import { clientRouter } from "./routers/client-router";
 import { addressRouter } from "./routers/address-router";
 import { productRouter } from "./routers/product-router";
+import { ordderRouter } from "./routers/ordder-router";
 
 loadEnv();
 
@@ -23,6 +24,7 @@ app
   .use("/clients", clientRouter)
   .use("/auth", authRouter)
   .use("/products", productRouter)
+  .use("/ordder", ordderRouter)
 
 export function init(): Promise<Express> {
   connectDb();

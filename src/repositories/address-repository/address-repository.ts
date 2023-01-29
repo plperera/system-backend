@@ -10,6 +10,17 @@ async function findManyAddressByClientId(clientId: number) {
     }) 
 }
 
+async function findManyAddressByClientIdAndId(clientId: number, addressId: number) {
+    return prisma.address.findMany({
+        where:{
+            clientId: clientId,
+            AND:{
+                id: addressId
+            }
+        }
+    }) 
+}
+
 async function createAddress(body: newAddressBody){
     return prisma.address.create({
         data:{
@@ -25,6 +36,7 @@ async function createAddress(body: newAddressBody){
 }
 const addressRepository = {
     findManyAddressByClientId,
+    findManyAddressByClientIdAndId,
     createAddress
 }
 
