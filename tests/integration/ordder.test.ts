@@ -401,3 +401,203 @@ describe("POST /ordder", () => {
         
     })
 });
+
+describe("GET /ordder", () => {
+
+    it("should respond with status 401 if no token is given", async () => {
+
+        const response = await server.get("/ordder");
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+
+    });
+
+    it("should respond with status 401 if given token is not valid", async () => {
+
+        const token = faker.lorem.word();
+
+        const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+
+    });
+
+    it("should respond with status 401 if there is no session for given token", async () => {
+
+        const body = authFactory.generateValidBody()
+        const user = await userFactory.createUser(body);
+        
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+
+        const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+    
+    describe("when token is valid and no have ordders yet", async () => {
+
+        it("should respond with status 200", async () => {
+
+            const token = await generateValidToken()
+
+            const user = await userFactory.getFirstUser()
+
+            const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
+
+            expect(response.status).toBe(httpStatus.OK);
+
+        })
+
+        it("should respond with ordder data", async () => {
+
+            const token = await generateValidToken()
+
+            const user = await userFactory.getFirstUser()
+
+            const ordderData = await ordderFactory.getAllOrdders()
+
+            const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
+
+            expect(response.body).toEqual(ordderData);
+
+        })
+
+        describe("when token is valid and have 1 ordderItem", async () => {
+
+            it("should respond with status 200", async () => {
+    
+                const token = await generateValidToken()
+    
+                const user = await userFactory.getFirstUser()
+    
+                await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:1})
+    
+                const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
+    
+                expect(response.status).toBe(httpStatus.OK);
+    
+            })
+    
+            it("should respond with ordder data", async () => {
+    
+                const token = await generateValidToken()
+    
+                const user = await userFactory.getFirstUser()
+    
+                await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:1})
+    
+                const ordderData = await ordderFactory.getAllOrdders()
+    
+                const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
+    
+                expect(response.body).toEqual(ordderData);
+    
+            })
+    
+            describe("when body data is valid and have 15 ordderItem", async () => {
+    
+                it("should respond with status 200", async () => {
+    
+                    const token = await generateValidToken()
+    
+                    const user = await userFactory.getFirstUser()
+        
+                    await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:15})
+        
+                    const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
+        
+                    expect(response.status).toBe(httpStatus.OK);
+    
+                })
+    
+                it("should respond with ordder data", async () => {
+    
+                    const token = await generateValidToken()
+    
+                    const user = await userFactory.getFirstUser()
+        
+                    await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:15})
+        
+                    const ordderData = await ordderFactory.getAllOrdders()
+        
+                    const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
+        
+                    expect(response.body).toEqual(ordderData);
+    
+                })
+            })
+        })
+    
+        describe("when token is valid and have 2 ordders and 1 ordderItem", async () => {
+    
+            it("should respond with status 200", async () => {
+    
+                const token = await generateValidToken()
+    
+                const user = await userFactory.getFirstUser()
+    
+                await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:1})
+                await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:1})
+    
+                const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
+    
+                expect(response.status).toBe(httpStatus.OK);
+    
+            })
+    
+            it("should respond with ordder data", async () => {
+    
+                const token = await generateValidToken()
+    
+                const user = await userFactory.getFirstUser()
+    
+                await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:1})
+                await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:1})
+    
+                const ordderData = await ordderFactory.getAllOrdders()
+    
+                const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
+    
+                expect(response.body).toEqual(ordderData);
+    
+            })
+    
+            describe("when token is valid and have 2 ordders and 15 ordderItem", async () => {
+    
+                it("should respond with status 200", async () => {
+    
+                    const token = await generateValidToken()
+    
+                    const user = await userFactory.getFirstUser()
+        
+                    await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:15})
+                    await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:15})
+        
+                    const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
+        
+                    expect(response.status).toBe(httpStatus.OK);
+    
+                })
+    
+                it("should respond with ordder data", async () => {
+    
+                    const token = await generateValidToken()
+    
+                    const user = await userFactory.getFirstUser()
+        
+                    await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:15})
+                    await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:15})
+        
+                    const ordderData = await ordderFactory.getAllOrdders()
+        
+                    const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
+        
+                    expect(response.body).toEqual(ordderData);
+    
+                })
+            })
+        })
+
+    })
+    
+});

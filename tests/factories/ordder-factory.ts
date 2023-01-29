@@ -91,7 +91,7 @@ async function createFullOrdder(body: fullOrdderBody) {
 
     productIdArray.map(async (e: number) => await ordderFactory.createValidBodyItem({ordderId: ordder.id, productId: e}))
 
-    prisma.ordderItem.createMany({
+    return prisma.ordderItem.createMany({
         data:[productIdArray]
     })
     
@@ -108,6 +108,10 @@ async function getOrdderById(ordderId: number) {
     })
 }
 
+async function getAllOrdders(){
+    return prisma.ordder.findMany()
+}
+
 
 const ordderFactory = {
     createValidOrdderBody,
@@ -116,7 +120,8 @@ const ordderFactory = {
     createValidItem,
     createFullOrdder,
     createValidBodyItemWithoutOrdderId,
-    getOrdderById
+    getOrdderById,
+    getAllOrdders
 }
 
 export default ordderFactory
