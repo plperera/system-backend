@@ -39,29 +39,13 @@ export async function newOrdder(req: Request, res: Response){
 
 export async function getAllOrdders(req: Request, res: Response){
   try {
-      const {clientId} = req.params
-
-      const isValid = addressIdParamsSCHEMA.validate({clientId}, {abortEarly: false})
-
-      if(isValid.error){
-          return res.sendStatus(httpStatus.BAD_REQUEST)
-      }
    
-      const allAddress = await addressService.findManyAddressByClientId(Number(clientId))
+      const allOrdders = await ordderService.findAllOrdders()
       
-      return res.status(httpStatus.OK).send(allAddress)
+      return res.status(httpStatus.OK).send(allOrdders)
              
   } catch (error) {
-      if(error.name === "ConflictError") {
-          res.sendStatus(httpStatus.CONFLICT);
-        }
-        if (error.name === "NotFoundError") {
-          return res.status(httpStatus.NOT_FOUND).send(error);
-        }
-        if (error.name === "ForbiddenError") {
-          return res.status(httpStatus.FORBIDDEN).send(error);
-        }
-        return res.sendStatus(httpStatus.NOT_FOUND);
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 

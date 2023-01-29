@@ -113,7 +113,11 @@ async function getOrdderById(ordderId: number) {
 }
 
 async function getAllOrdders(){
-    return prisma.ordder.findMany()
+    return prisma.ordder.findMany({
+        include:{
+            ordderItem:true
+        }
+    })
 }
 
 

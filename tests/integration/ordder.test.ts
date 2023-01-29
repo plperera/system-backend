@@ -262,8 +262,6 @@ describe("POST /ordder", () => {
                     delete ordderData.updatedAt
                     delete ordderData.ordderItem
 
-                    console.log(ordderData)
-
                     expect(response.body).toMatchObject(ordderData);
 
                 })
@@ -424,7 +422,7 @@ describe("POST /ordder", () => {
         
     })
 });
-/*
+
 describe("GET /ordder", () => {
 
     it("should respond with status 401 if no token is given", async () => {
@@ -481,7 +479,7 @@ describe("GET /ordder", () => {
 
             const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
 
-            expect(response.body).toEqual(ordderData);
+            expect(response.body).toMatchObject(ordderData);
 
         })
 
@@ -510,10 +508,19 @@ describe("GET /ordder", () => {
                 await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:1})
     
                 const ordderData = await ordderFactory.getAllOrdders()
+
+                ordderData.map( e => {
+                    e.ordderItem.map( e => {
+                        delete e.createdAt
+                        delete e.updatedAt
+                    })
+                    delete e.createdAt
+                    delete e.updatedAt
+                })
     
                 const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
     
-                expect(response.body).toEqual(ordderData);
+                expect(response.body).toMatchObject(ordderData);
     
             })
     
@@ -542,10 +549,19 @@ describe("GET /ordder", () => {
                     await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:15})
         
                     const ordderData = await ordderFactory.getAllOrdders()
+
+                    ordderData.map( e => {
+                        e.ordderItem.map( e => {
+                            delete e.createdAt
+                            delete e.updatedAt
+                        })
+                        delete e.createdAt
+                        delete e.updatedAt
+                    })    
         
                     const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
         
-                    expect(response.body).toEqual(ordderData);
+                    expect(response.body).toMatchObject(ordderData);
     
                 })
             })
@@ -578,10 +594,19 @@ describe("GET /ordder", () => {
                 await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:1})
     
                 const ordderData = await ordderFactory.getAllOrdders()
+
+                ordderData.map( e => {
+                    e.ordderItem.map( e => {
+                        delete e.createdAt
+                        delete e.updatedAt
+                    })
+                    delete e.createdAt
+                    delete e.updatedAt
+                })
     
                 const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
     
-                expect(response.body).toEqual(ordderData);
+                expect(response.body).toMatchObject(ordderData);
     
             })
     
@@ -612,10 +637,19 @@ describe("GET /ordder", () => {
                     await ordderFactory.createFullOrdder({userId: user.id, numberOfItens:15})
         
                     const ordderData = await ordderFactory.getAllOrdders()
+
+                    ordderData.map( e => {
+                        e.ordderItem.map( e => {
+                            delete e.createdAt
+                            delete e.updatedAt
+                        })
+                        delete e.createdAt
+                        delete e.updatedAt
+                    })    
         
                     const response = await server.get("/ordder").set("Authorization", `Bearer ${token}`)
         
-                    expect(response.body).toEqual(ordderData);
+                    expect(response.body).toMatchObject(ordderData);
     
                 })
             })
@@ -624,4 +658,3 @@ describe("GET /ordder", () => {
     })
     
 });
-*/

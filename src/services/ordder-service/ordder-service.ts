@@ -10,8 +10,11 @@ import { newOrdderWithItensBody } from "@/schemas/newOrdderSCHEMA"
 import productRepository from "@/repositories/products-repository/products-repository"
 import ordderRepository from "@/repositories/ordder-repository/ordder-repository"
 
-async function findAllOrdders(clientId: number){
+async function findAllOrdders(){
 
+    const allOrdders = await ordderRepository.findAllOrdders()
+
+    return allOrdders
 
 }
 
