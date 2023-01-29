@@ -40,6 +40,19 @@ export async function newProduct(req: Request, res: Response) {
 
     }
 }
+export async function getAllProducts(req: Request, res: Response) {
 
+    try {
+
+        const allProducts = await productService.getAllProducts()
+        return res.status(httpStatus.OK).send(allProducts)
+
+        
+    } catch (error) {
+          
+        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+
+    }
+}
 
 

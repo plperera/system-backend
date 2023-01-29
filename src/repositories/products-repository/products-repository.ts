@@ -17,6 +17,10 @@ async function findByNameOrCOD(body: { name: string, COD: string}) {
     })
 }
 
+async function findAllProduct() {
+    return prisma.products.findMany({})    
+}
+
 async function createProduct(body: newProductBody) {
     return prisma.products.create({
         data:{
@@ -32,7 +36,8 @@ async function createProduct(body: newProductBody) {
 
 const productRepository = {
     findByNameOrCOD,
-    createProduct
+    createProduct,
+    findAllProduct
 }
 
 export default productRepository

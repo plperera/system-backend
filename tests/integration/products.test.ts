@@ -259,7 +259,7 @@ describe("GET /product", () => {
                 delete e.createdAt
             })
 
-            expect(response.status).toMatchObject(allProducts);
+            expect(response.body).toMatchObject(allProducts);
 
         });
 
@@ -282,7 +282,7 @@ describe("GET /product", () => {
                 delete e.createdAt
             })
 
-            expect(response.status).toMatchObject(allProducts);
+            expect(response.body).toMatchObject(allProducts);
 
         });
 
@@ -305,7 +305,7 @@ describe("GET /product", () => {
                 delete e.createdAt
             })
 
-            expect(response.status).toMatchObject(allProducts);
+            expect(response.body).toMatchObject(allProducts);
 
         });
     })

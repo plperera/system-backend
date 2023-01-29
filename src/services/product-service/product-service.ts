@@ -21,8 +21,14 @@ async function createProduct(body: newProductBody){
     return newProduct
     
 }
+
+async function getAllProducts() {
+    const allProducts = await productRepository.findAllProduct()
+    return allProducts
+}
 const productService = {
-    createProduct
+    createProduct,
+    getAllProducts
 }
 
 export default productService
