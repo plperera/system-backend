@@ -13,7 +13,7 @@ export async function newProduct(req: Request, res: Response) {
         const isValid = newProductSCHEMA.validate(req.body, {abortEarly: false})
 
         if(isValid.error){
-            return res.sendStatus(httpStatus.BAD_REQUEST)
+            return res.status(httpStatus.BAD_REQUEST).send(isValid.error)
         }
 
         const newProduct = await productService.createProduct(req.body)
@@ -34,10 +34,9 @@ export async function newProduct(req: Request, res: Response) {
         }
         if (error.name === "ForbiddenError") {
             return res.status(httpStatus.FORBIDDEN).send(error);
-        }
-          
-        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
-
+        } else {
+            return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+        }      
     }
 }
 export async function getAllProducts(req: Request, res: Response) {
