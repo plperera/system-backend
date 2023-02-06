@@ -1,10 +1,21 @@
 import { prisma } from "@/config";
 import { newClientBody } from "../../factories/clients-factory";
 
-async function getClientByName(name: string) {
+async function getClientByUnique(body: newClientBody) {
     return prisma.clients.findFirst({
         where:{
-            name: name
+            OR: [
+                { 
+                    CPForCNPJ: body.CPForCNPJ,
+                },
+                { 
+                    email: body.email,
+                },
+                { 
+                    name: body.name,
+                },
+
+            ]
         }
     })
 }
@@ -22,7 +33,8 @@ async function createNewClient(body: newClientBody){
         data:{
             email: body.email,
             mainNumber: body.mainNumber,
-            name: body.name    
+            name: body.name,
+            CPForCNPJ: body.CPForCNPJ             
         }
     })
 }
@@ -32,7 +44,7 @@ async function findManyClients(){
 }
 
 const clientRepository = {
-    getClientByName,
+    getClientByUnique,
     createNewClient,
     findManyClients,
     getClientById

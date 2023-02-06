@@ -10,11 +10,11 @@ export async function newClient(req: Request, res: Response){
         const isValid = newClientSCHEMA.validate(req.body, {abortEarly: false})
 
         if(isValid.error){
-            return res.sendStatus(httpStatus.BAD_REQUEST)
+            return res.status(httpStatus.BAD_REQUEST).send(isValid.error)
         }
-        const { name, email, mainNumber } = req.body
+        const { name, email, mainNumber, CPForCNPJ } = req.body
 
-        const newClient: clients = await clientService.createNewClient({ name, email, mainNumber })
+        const newClient: clients = await clientService.createNewClient({ name, email, mainNumber, CPForCNPJ })
         
         return res.status(httpStatus.CREATED).send(newClient)
                

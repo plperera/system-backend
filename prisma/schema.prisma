@@ -33,7 +33,7 @@ model users {
 model address {
   id        Int      @id @default(autoincrement())
   clientId  Int
-  CEP       String   
+  CEP       String?   
   cidade    String  
   rua       String  
   bairro    String  
@@ -50,6 +50,7 @@ model clients {
   id          Int        @id @default(autoincrement())
   name        String     @unique
   email       String?    @unique
+  CPForCNPJ   String     @unique
   mainNumber  String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt

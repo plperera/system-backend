@@ -8,6 +8,7 @@ export type newClientBody = {
     name: string,
     email: string,
     mainNumber: string
+    CPForCNPJ: string
 }
 async function createClientBody() {
     return {
@@ -22,7 +23,8 @@ async function createClient(body: newClientBody) {
         data:{
             name: body.name,
             email: body.email,
-            mainNumber: body.mainNumber 
+            mainNumber: body.mainNumber,
+            CPForCNPJ:"60744541085"
         }
     })
 }

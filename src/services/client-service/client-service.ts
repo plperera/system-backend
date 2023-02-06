@@ -5,7 +5,7 @@ import clientRepository from "@/repositories/client-repository/client-repository
 
 async function createNewClient(body: newClientBody){
 
-    const hasClient = await clientRepository.getClientByName(body.name)
+    const hasClient = await clientRepository.getClientByUnique(body)
 
     if(hasClient !== null){
         throw conflictError()
