@@ -1,8 +1,5 @@
-import bcrypt from "bcrypt";
 import faker from "@faker-js/faker";
 import { prisma } from "@/config";
-import { users } from ".prisma/client";
-import { signUpBody } from "./auth-factory";
 
 export type newClientBody = {
     name: string,
@@ -14,7 +11,8 @@ async function createClientBody() {
     return {
         name: faker.name.findName(),
         email: faker.internet.email(),
-        mainNumber: faker.phone.phoneNumber('35 ##### ####')
+        mainNumber: faker.phone.phoneNumber('35 ##### ####'),
+        CPForCNPJ: faker.random.numeric(3) + "." + faker.random.numeric(3) + "." + faker.random.numeric(3) + "-" + faker.random.numeric(2)
     }
 }
 
@@ -24,7 +22,7 @@ async function createClient(body: newClientBody) {
             name: body.name,
             email: body.email,
             mainNumber: body.mainNumber,
-            CPForCNPJ:"60744541085"
+            CPForCNPJ: body.CPForCNPJ
         }
     })
 }

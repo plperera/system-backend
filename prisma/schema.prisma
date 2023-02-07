@@ -108,19 +108,19 @@ model ordder {
 }
 
 model payments {
-  id              Int         @id @default(autoincrement())
+  id              Int             @id @default(autoincrement())
   ordderId        Int
   paymentTypeId   Int
   value           Int      
-  hasPaid         Boolean      
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  hasPaid         Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 
-  ordder          ordder?      @relation(fields: [ordderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ordder          ordder?         @relation(fields: [ordderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   paymentType     paymentType?    @relation(fields: [paymentTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 model paymentType {
-  id              Int         @id @default(autoincrement())
+  id              Int             @id @default(autoincrement())
   type            String
 
   payments        payments[]
