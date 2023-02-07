@@ -102,7 +102,7 @@ model ordder {
   users           users?      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   clients         clients?    @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   address         address?    @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  
+
   payments        payments[]
   ordderItem      ordderItem[]
 }
@@ -112,6 +112,7 @@ model payments {
   ordderId        Int
   paymentTypeId   Int
   value           Int      
+  hasPaid         Boolean      
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
