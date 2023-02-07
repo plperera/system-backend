@@ -10,6 +10,7 @@ import { clientRouter } from "./routers/client-router";
 import { addressRouter } from "./routers/address-router";
 import { productRouter } from "./routers/product-router";
 import { ordderRouter } from "./routers/ordder-router";
+import { paymentTypeRouter } from "./routers/paymentType-router";
 
 loadEnv();
 
@@ -25,6 +26,7 @@ app
   .use("/auth", authRouter)
   .use("/products", productRouter)
   .use("/ordder", ordderRouter)
+  .use("/payment-type", paymentTypeRouter)
 
 export function init(): Promise<Express> {
   connectDb();
