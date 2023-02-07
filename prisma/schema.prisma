@@ -102,7 +102,27 @@ model ordder {
   users           users?      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   clients         clients?    @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   address         address?    @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  
+  payments        payments[]
   ordderItem      ordderItem[]
+}
+
+model payments {
+  id              Int         @id @default(autoincrement())
+  ordderId        Int
+  paymentTypeId   Int
+  value           Int      
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  ordder          ordder?      @relation(fields: [ordderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  paymentType     paymentType?    @relation(fields: [paymentTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+model paymentType {
+  id              Int         @id @default(autoincrement())
+  type            String
+
+  payments        payments[]
 }
 
 
