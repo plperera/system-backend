@@ -11,8 +11,11 @@ export type newOrdderWithItensBody = {
         productId: number,
         itemAmount: number,
         itemPrice: number,
-        ordderId: number
     }[],
+    paymentType: {
+        paymentTypeId: number,
+        value: number,
+    }[]
 }
 
 const newOrdderSCHEMA = joi.object<newOrdderWithItensBody>({
@@ -20,7 +23,8 @@ const newOrdderSCHEMA = joi.object<newOrdderWithItensBody>({
     userId: joi.number().required(),
     clientId: joi.number().required(),
     addressId: joi.number().required(),
-    itens: joi.array().required()
+    itens: joi.array().required(),
+    paymentType: joi.array().required()
     
 })
 

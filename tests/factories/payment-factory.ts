@@ -6,11 +6,10 @@ export type newPaymentBody = {
     paymentTypeId: number,
     value: number,
 }
-async function generatePaymentTypeValidBody(body:{ordderId: number, paymentTypeId:number}) {
+async function generatePaymentTypeValidBody(paymentTypeId: number) {
     return {
-        ordderId: body.ordderId,
-        paymentTypeId: body.paymentTypeId,
-        value: faker.random.numeric(4),
+        paymentTypeId: Number(paymentTypeId),
+        value: Number(faker.random.numeric(4)),
     }
 }
 async function createPayment(body: newPaymentBody) {
