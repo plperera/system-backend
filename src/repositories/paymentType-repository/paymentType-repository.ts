@@ -3,10 +3,14 @@ import { newClientBody } from "../../factories/clients-factory";
 import { newPaymentTypeBody } from "../../factories/paymentType-factory";
 import { newProductBody } from "../../factories/products-factory";
 
-async function findPaymentTypeByType(body: newPaymentTypeBody) {
-    return prisma.paymentType.findFirst({
-        where:{
-            type: body.type
+async function findAllPaymentType() {
+    return prisma.paymentType.findMany({})
+}
+
+async function findPaymentTypeByType(type: string) {
+    return prisma.paymentType.findMany({
+        where: {
+            type: type
         }
     })
 }
@@ -21,8 +25,9 @@ async function createPaymentType(body: newPaymentTypeBody) {
 }
 
 const paymentTypeRepository = {
-    findPaymentTypeByType,
-    createPaymentType
+    findAllPaymentType,
+    createPaymentType,
+    findPaymentTypeByType
 }
 
 export default paymentTypeRepository

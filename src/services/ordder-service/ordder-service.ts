@@ -8,7 +8,11 @@ import { address } from "@prisma/client"
 import { newOrdderBody } from "../../factories/ordder-factory"
 import { newOrdderWithItensBody } from "@/schemas/newOrdderSCHEMA"
 import productRepository from "@/repositories/products-repository/products-repository"
-import ordderRepository from "@/repositories/ordder-repository/ordder-repository"
+import ordderRepository, { newItensBody } from "@/repositories/ordder-repository/ordder-repository"
+import paymentTypeRepository from "@/repositories/paymentType-repository/paymentType-repository"
+import e from "express"
+import paymentRepository from "@/repositories/payment-repository/payment-repository"
+import { newPaymentBody } from "../../factories/payment-factory"
 
 async function findAllOrdders(){
 
@@ -20,7 +24,7 @@ async function findAllOrdders(){
 
 async function createOrdder(body: newOrdderWithItensBody){
 
-    const {addressId, clientId, userId, itens} = body
+    const {addressId, clientId, userId, itens, paymentType} = body
 
     const hasClient = await clientRepository.getClientById(clientId)
 
@@ -47,13 +51,41 @@ async function createOrdder(body: newOrdderWithItensBody){
         }
     })
 
-    const newOrdder = await ordderRepository.createOrdder({addressId, clientId, userId})
+    const findAllPaymentTypes = await paymentTypeRepository.findAllPaymentType()
+    const PaymentTypesHashtable: any = {}
 
-    itens.map(e => {
-        e["ordderId"] = newOrdder.id
+    /*
+    findAllPaymentTypes.map(e => {
+        PaymentTypesHashtable[e.id] = true
     })
     
-    await ordderRepository.createItens(itens)
+    paymentType.map(e => {
+        if (!productsHashtable[e.paymentTypeId]){
+            throw notFoundError()
+        }
+    })
+    */
+    paymentType.map(e => {
+        if (!findAllPaymentTypes.find(arr => arr.id === e.paymentTypeId)){
+            throw notFoundError()
+        }
+    })
+    
+    const itemAmount = itens.reduce((total, num) => num.productId === 26 ? (total - num.itemAmount * num.itemPrice):(total + num.itemAmount * num.itemPrice), 0)
+    const paymentAmount = paymentType.reduce((total, num) => total + num.value, 0)
+
+    if (itemAmount !== paymentAmount){
+        throw unauthorizedError()
+    }
+
+    const newOrdder = await ordderRepository.createOrdder({addressId, clientId, userId})
+
+    const itensWithOrderId: newItensBody = itens.map(e => Object.assign({}, e, {ordderId: newOrdder.id}))
+    const paymentTypeWithOrderId: newPaymentBody[] = paymentType.map(e => Object.assign({}, e, {ordderId: newOrdder.id}))
+    
+    await ordderRepository.createItens(itensWithOrderId)
+    await paymentRepository.createManyPayments(paymentTypeWithOrderId)
+    
     const ordderItem = await ordderRepository.findAllItensByOrdderId(newOrdder.id)
 
     return {

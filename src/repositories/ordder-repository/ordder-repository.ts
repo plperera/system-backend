@@ -1,6 +1,6 @@
 import { prisma } from "@/config";
 import { newClientBody } from "../../factories/clients-factory";
-import { newItemBody, newOrdderBody } from "../../factories/ordder-factory";
+import { newOrdderBody } from "../../factories/ordder-factory";
 import { newProductBody } from "../../factories/products-factory";
 
 export type newItensBody = {

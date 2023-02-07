@@ -6,7 +6,7 @@ export type newPaymentTypeBody = {
 }
 async function generatePaymentTypeValidBody() {
     return {
-        type: faker.finance.transactionType() + " - " + faker.address.countryCode('alpha-3'),
+        type: faker.finance.transactionType(),
     }
     
 }

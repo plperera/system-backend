@@ -5,9 +5,9 @@ import { newPaymentTypeBody } from "../../factories/paymentType-factory"
 
 async function createPaymentType(body: newPaymentTypeBody){
 
-    const hasType = await paymentTypeRepository.findPaymentTypeByType(body)
+    const hasType = await paymentTypeRepository.findPaymentTypeByType(body.type)
 
-    if (hasType){
+    if (hasType[0] !== undefined){
         throw conflictError()
     }
 

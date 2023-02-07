@@ -27,10 +27,13 @@ export async function newPaymentType(req: Request, res: Response){
                
     } catch (error) {
         if(error.name === "ConflictError") {
-            res.sendStatus(httpStatus.CONFLICT);
+            return res.sendStatus(httpStatus.CONFLICT);
+        } else {
+            
+            return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+       
     }
 }
 

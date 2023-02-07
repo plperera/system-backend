@@ -8,7 +8,7 @@ export type newPaymentBody = {
 }
 async function generatePaymentTypeValidBody(paymentTypeId: number) {
     return {
-        paymentTypeId: Number(paymentTypeId),
+        paymentTypeId: paymentTypeId,
         value: Number(faker.random.numeric(4)),
     }
 }

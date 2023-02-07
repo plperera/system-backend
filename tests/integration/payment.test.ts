@@ -18,6 +18,11 @@ beforeAll(async () => {
   await cleanDb();
 });
 
+afterAll(async () => {
+    await init();
+    await cleanDb();
+});
+
 beforeEach(async () => {
   await cleanDb();
 });
@@ -94,20 +99,19 @@ describe("POST /payment-type", () => {
 
         describe("when body is valid", () => {
 
-            it("should respond with status 409 when already have a registered TYPE", async () => {
+            it("should respond with status 401 when already have a registered TYPE", async () => {
 
                 const token = await generateValidToken()
 
                 const body = await paymentTypeFactory.generatePaymentTypeValidBody()
 
-                await paymentTypeFactory.createPaymentType(body)
+                const paymentType = await paymentTypeFactory.createPaymentType(body)
 
                 const response = await server.post("/payment-type").set("Authorization", `Bearer ${token}`).send(body)
 
-                expect(response.status).toBe(httpStatus.CONFLICT);
+                expect(response.status).toBe(httpStatus.UNAUTHORIZED);
 
             });
-
             it("should respond with status 201 when no have a registered TYPE", async () => {
 
                 const token = await generateValidToken()

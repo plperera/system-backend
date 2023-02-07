@@ -266,8 +266,11 @@ describe("POST /ordder", () => {
                     const ordderItem = await ordderFactory.createValidBodyItemWithoutOrdderId({productId: product.id})
 
                     productArray.push(ordderItem)
+
                 }
                 
+                //const type = await paymentTypeFactory.createPaymentType(await paymentTypeFactory.generatePaymentTypeValidBody())
+            
                 const body:newOrdderWithItensBody = {
                     ...ordderBody, 
                     itens: productArray,
@@ -278,20 +281,11 @@ describe("POST /ordder", () => {
 
                 const response = await server.post("/ordder").set("Authorization", `Bearer ${token}`).send(body)
 
-                const ordderData = await ordderFactory.getOrdderById(response.body.id)
-
-                delete ordderData.deliveryStatus
-                delete ordderData.createdAt
-                delete ordderData.isValid
-                delete ordderData.paymentStatus
-                delete ordderData.updatedAt
-                delete ordderData.ordderItem
-
-                expect(response.body).toMatchObject(ordderData);
+                expect(response.status).toBe(httpStatus.NOT_FOUND);
 
             })
 
-            it("should respond with status 404 when payment value not equal to order value", async () => {
+            it("should respond with status 401 when payment value not equal to order value", async () => {
 
                 const token = await generateValidToken()
 
@@ -308,30 +302,22 @@ describe("POST /ordder", () => {
                     const ordderItem = await ordderFactory.createValidBodyItemWithoutOrdderId({productId: product.id})
 
                     productArray.push(ordderItem)
-                }
 
-                const type = await paymentTypeFactory.createPaymentType(await paymentTypeFactory.generatePaymentTypeValidBody())
+                }
                 
+                const type = await paymentTypeFactory.createPaymentType(await paymentTypeFactory.generatePaymentTypeValidBody())
+            
                 const body:newOrdderWithItensBody = {
                     ...ordderBody, 
                     itens: productArray,
                     paymentType:[ await paymentFactory.generatePaymentTypeValidBody(type.id)]
                 }
 
-                body.paymentType[0].value = body.itens.reduce((total, num) => total + num.itemAmount * num.itemPrice, 0) + 3737;
+                body.paymentType[0].value = body.itens.reduce((total, num) => total + num.itemAmount * num.itemPrice, 0) + 373737;
 
                 const response = await server.post("/ordder").set("Authorization", `Bearer ${token}`).send(body)
 
-                const ordderData = await ordderFactory.getOrdderById(response.body.id)
-
-                delete ordderData.deliveryStatus
-                delete ordderData.createdAt
-                delete ordderData.isValid
-                delete ordderData.paymentStatus
-                delete ordderData.updatedAt
-                delete ordderData.ordderItem
-
-                expect(response.body).toMatchObject(ordderData);
+                expect(response.status).toBe(httpStatus.UNAUTHORIZED);
 
             })
 
