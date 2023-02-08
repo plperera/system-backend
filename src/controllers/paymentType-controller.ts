@@ -37,3 +37,17 @@ export async function newPaymentType(req: Request, res: Response){
     }
 }
 
+export async function findAllPaymentTypes(req: Request, res: Response){
+    try {
+
+        const allPaymentTypes = await paymentTypeService.findAllPaymentTypes()
+
+        return res.status(httpStatus.OK).send(allPaymentTypes)
+        
+    } catch (error) {
+        
+        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+       
+    }
+}
+

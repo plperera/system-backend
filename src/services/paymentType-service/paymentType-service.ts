@@ -17,8 +17,17 @@ async function createPaymentType(body: newPaymentTypeBody){
     
 }
 
+async function findAllPaymentTypes(){
+
+    const allPaymentTypes = await paymentTypeRepository.findAllPaymentType()
+
+    return allPaymentTypes
+    
+}
+
 const paymentTypeService = {
     createPaymentType,
+    findAllPaymentTypes
 }
 
 export default paymentTypeService
