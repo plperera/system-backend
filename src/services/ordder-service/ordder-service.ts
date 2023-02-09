@@ -65,16 +65,34 @@ async function createOrdder(body: newOrdderWithItensBody){
         }
     })
     */
+
     paymentType.map(e => {
         if (!findAllPaymentTypes.find(arr => arr.id === e.paymentTypeId)){
+            console.log(e)
+
             throw notFoundError()
         }
     })
+
+    //num.productId === 26 ? (total - num.itemAmount * num.itemPrice):(total + num.itemAmount * num.itemPrice)
     
-    const itemAmount = itens.reduce((total, num) => num.productId === 26 ? (total - num.itemAmount * num.itemPrice):(total + num.itemAmount * num.itemPrice), 0)
-    const paymentAmount = paymentType.reduce((total, num) => total + num.value, 0)
+    const itemAmount = itens.reduce((total, num) => {
+
+        if(num.productId === 26) {
+            return total + ((Number(num.itemAmount) * Number(num.itemPrice) * -1) / 100);
+          } if(num.productId === 25) {
+            return total + ((Number(num.itemAmount) * Number(num.itemPrice) * 1) / 100);
+          } else {
+            return total + (Number(num.itemAmount) * Number(num.itemPrice) / 10000);
+        }
+
+    }, 0)
+    const paymentAmount = paymentType.reduce((total, num) => total + num.value / 100, 0)
+    
 
     if (itemAmount !== paymentAmount){
+        console.log(itemAmount)
+        console.log(paymentAmount)
         throw unauthorizedError()
     }
 
